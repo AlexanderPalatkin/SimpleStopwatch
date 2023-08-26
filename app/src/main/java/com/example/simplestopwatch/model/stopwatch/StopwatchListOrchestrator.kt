@@ -1,5 +1,6 @@
-package com.example.simplestopwatch
+package com.example.simplestopwatch.model.stopwatch
 
+import com.example.simplestopwatch.utils.DEFAULT_TIME
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,7 +11,7 @@ class StopwatchListOrchestrator(
 ) {
 
     private var job: Job? = null
-    private val mutableTicker = MutableStateFlow("")
+    private val mutableTicker = MutableStateFlow(DEFAULT_TIME)
     val ticker: StateFlow<String> = mutableTicker
 
     fun start() {
@@ -44,6 +45,6 @@ class StopwatchListOrchestrator(
     }
 
     private fun clearValue() {
-        mutableTicker.value = ""
+        mutableTicker.value = DEFAULT_TIME
     }
 }

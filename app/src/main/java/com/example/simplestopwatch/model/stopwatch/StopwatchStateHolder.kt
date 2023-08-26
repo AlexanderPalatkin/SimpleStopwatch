@@ -1,4 +1,6 @@
-package com.example.simplestopwatch
+package com.example.simplestopwatch.model.stopwatch
+
+import com.example.simplestopwatch.model.time.TimestampMillisecondsFormatter
 
 class StopwatchStateHolder(
     private val stopwatchStateCalculator: StopwatchStateCalculator,
@@ -6,8 +8,7 @@ class StopwatchStateHolder(
     private val timestampMillisecondsFormatter: TimestampMillisecondsFormatter
 ) {
 
-    var currentState: StopwatchState = StopwatchState.Paused(0)
-        private set
+    private var currentState: StopwatchState = StopwatchState.Paused(0)
 
     fun start() {
         currentState = stopwatchStateCalculator.calculateRunningState(currentState)

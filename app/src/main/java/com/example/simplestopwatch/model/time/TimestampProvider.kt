@@ -1,4 +1,4 @@
-package com.example.simplestopwatch
+package com.example.simplestopwatch.model.time
 
 interface TimestampProvider {
 

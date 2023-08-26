@@ -1,4 +1,6 @@
-package com.example.simplestopwatch
+package com.example.simplestopwatch.model.stopwatch
+
+import com.example.simplestopwatch.model.time.TimestampProvider
 
 class StopwatchStateCalculator(
     private val timestampProvider: TimestampProvider,
