@@ -7,7 +7,8 @@ import com.example.simplestopwatch.model.stopwatch.StopwatchStateHolder
 import com.example.simplestopwatch.model.time.TimestampMillisecondsFormatter
 import com.example.simplestopwatch.model.time.TimestampProvider
 import com.example.simplestopwatch.view.MainTimestampProvider
-import com.example.simplestopwatch.viewmodel.StopwatchViewModel
+import com.example.simplestopwatch.view.fragments.FirstFragmentViewModel
+import com.example.simplestopwatch.view.fragments.SecondFragmentViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -15,17 +16,23 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-
 val application = module {
 
-    single {
+    single(named("firstFragmentOrchestrator")) {
         StopwatchListOrchestrator(
-            stopwatchStateHolder = get(),
-            scope = get(named("mainCoroutineScope"))
+            stopwatchStateHolder = get(named("firstFragmentStateHolder")),
+            scope = get(named("firstCoroutineScope"))
         )
     }
 
-    single {
+    single(named("secondFragmentOrchestrator")) {
+        StopwatchListOrchestrator(
+            stopwatchStateHolder = get(named("secondFragmentStateHolder")),
+            scope = get(named("secondCoroutineScope"))
+        )
+    }
+
+    single(named("firstFragmentStateHolder")) {
         StopwatchStateHolder(
             stopwatchStateCalculator = get(),
             elapsedTimeCalculator = get(),
@@ -33,8 +40,20 @@ val application = module {
         )
     }
 
-    single(named("mainCoroutineScope")) {
-        CoroutineScope(Dispatchers.Main + SupervisorJob())
+    single(named("secondFragmentStateHolder")) {
+        StopwatchStateHolder(
+            stopwatchStateCalculator = get(),
+            elapsedTimeCalculator = get(),
+            timestampMillisecondsFormatter = get()
+        )
+    }
+
+    single(named("firstCoroutineScope")) {
+        CoroutineScope(Dispatchers.Default + SupervisorJob())
+    }
+
+    single(named("secondCoroutineScope")) {
+        CoroutineScope(Dispatchers.Default + SupervisorJob())
     }
 
     single {
@@ -57,12 +76,15 @@ val application = module {
             elapsedTimeCalculator = get()
         )
     }
-
 }
 
 val mainScreen = module {
 
     viewModel {
-        StopwatchViewModel(stopwatchListOrchestrator = get())
+        FirstFragmentViewModel(stopwatchListOrchestrator = get(named("firstFragmentOrchestrator")))
+    }
+
+    viewModel {
+        SecondFragmentViewModel(stopwatchListOrchestrator = get(named("secondFragmentOrchestrator")))
     }
 }

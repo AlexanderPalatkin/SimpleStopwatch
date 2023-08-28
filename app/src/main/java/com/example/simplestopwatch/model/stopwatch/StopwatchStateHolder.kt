@@ -30,5 +30,4 @@ class StopwatchStateHolder(
         }
         return timestampMillisecondsFormatter.format(elapsedTime)
     }
-
 }

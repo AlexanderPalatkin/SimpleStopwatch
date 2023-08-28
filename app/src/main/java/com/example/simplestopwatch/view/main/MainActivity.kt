@@ -2,39 +2,37 @@ package com.example.simplestopwatch.view.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import com.example.simplestopwatch.R
 import com.example.simplestopwatch.databinding.ActivityMainBinding
-import com.example.simplestopwatch.viewmodel.StopwatchViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.example.simplestopwatch.view.fragments.StopwatchFirstFragment
+import com.example.simplestopwatch.view.fragments.StopwatchSecondFragment
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    private val model by viewModel<StopwatchViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        model.formattedTime.observe(this) { formattedTime ->
-            binding.textTime.text = formattedTime
-        }
-
-        initButtons()
+        initFragments()
     }
 
-    private fun initButtons() {
-        binding.buttonStart.setOnClickListener {
-            model.startStopwatch()
-        }
+    private fun initFragments() {
+        replaceFragment(supportFragmentManager, R.id.container_first_fragment, StopwatchFirstFragment.newInstance())
+        replaceFragment(supportFragmentManager, R.id.container_second_fragment, StopwatchSecondFragment.newInstance())
+    }
 
-        binding.buttonPause.setOnClickListener {
-            model.pauseStopwatch()
-        }
-
-        binding.buttonStop.setOnClickListener {
-            model.stopStopwatch()
-        }
+    private fun replaceFragment(
+        fragmentManager: FragmentManager,
+        containerId: Int,
+        fragment: Fragment
+    ) {
+        fragmentManager.beginTransaction()
+            .replace(containerId, fragment)
+            .commit()
     }
 }
